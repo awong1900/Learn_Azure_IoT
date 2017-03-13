@@ -1,0 +1,11 @@
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe.config
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.pdb
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\bin\Debug\Microsoft.ServiceBus.dll
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\bin\Debug\Microsoft.ServiceBus.xml
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.csprojResolveAssemblyReference.cache
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.exe
+\\mac\home\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.pdb
+\\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe.config
+\\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.exe
+\\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.pdb
