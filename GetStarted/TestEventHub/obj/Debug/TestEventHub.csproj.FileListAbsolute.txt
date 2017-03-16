@@ -1,0 +1,7 @@
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\bin\Debug\TestEventHub.exe.config
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\bin\Debug\TestEventHub.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\bin\Debug\TestEventHub.pdb
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\bin\Debug\Microsoft.ServiceBus.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\bin\Debug\Microsoft.ServiceBus.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\obj\Debug\TestEventHub.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\TestEventHub\obj\Debug\TestEventHub.pdb

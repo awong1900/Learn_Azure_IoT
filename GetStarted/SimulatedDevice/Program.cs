@@ -31,30 +31,35 @@ namespace SimulatedDevice
             while (true)
             {
                 double currentWindSpeed = avgWindSpeed + rand.NextDouble() * 4 - 2;
+                //string levelVal, messageString = string.Empty;
+
+                //if (rand.NextDouble() > 0.7)
+                //{
+                //    messageString = "This is a critical message";
+                //    levelVal = "critical";
+                //}
+                //else
+                //{
+                //    levelVal = "normal"; 
+                //}
+
+                //var telemetryDataPoint = new
+                //{
+                //    deviceId = "myFirstDevice",
+                //    windSpeed = currentWindSpeed,
+                //    levelValue = levelVal,
+                //    messageStr = messageString
+                //};
 
                 var telemetryDataPoint = new
                 {
                     deviceId = "myFirstDevice",
                     windSpeed = currentWindSpeed
                 };
-                var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
-                string levelValue;
-
-                if (rand.NextDouble() > 0.7)
-                {
-                    messageString = "This is a critical message";
-                    levelValue = "critical";
-                }
-                else
-                {
-                    levelValue = "normal"; 
-                }
-
-                var message = new Message(Encoding.ASCII.GetBytes(messageString));
-                message.Properties.Add("level", levelValue);
-
-                await deviceClient.SendEventAsync(message);
-                Console.WriteLine("{0} > Sent message: {1}", DateTime.Now, messageString);
+                var messageSerialized = JsonConvert.SerializeObject(telemetryDataPoint);
+                var encodedMessage = new Message(Encoding.ASCII.GetBytes(messageSerialized));
+                await deviceClient.SendEventAsync(encodedMessage);
+                Console.WriteLine("{0} > Sent message: Device ID={1}, WindSpeed={2}", DateTime.Now, telemetryDataPoint.deviceId, telemetryDataPoint.windSpeed);
 
                 await Task.Delay(1000);
             }

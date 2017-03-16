@@ -9,3 +9,11 @@
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe.config
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.exe
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.pdb
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe.config
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\bin\Debug\ReadDeviceToCloudMessages.pdb
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\bin\Debug\Microsoft.ServiceBus.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\bin\Debug\Microsoft.ServiceBus.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ReadDeviceToCloudMessages\obj\Debug\ReadDeviceToCloudMessages.pdb

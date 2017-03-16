@@ -1,0 +1,7 @@
+SELECT
+    deviceId as deviceId,
+    windSpeed as windSpeed
+INTO
+   [out]
+FROM
+    [instream]

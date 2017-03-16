@@ -56,3 +56,32 @@
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ConsoleApplication1\bin\Debug\System.Web.Http.xml
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ConsoleApplication1\bin\Debug\Validation.xml
 \\Mac\Home\Documents\Visual Studio 2015\Projects\GetStarted\ConsoleApplication1\obj\Debug\CreateDeviceIdentity.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Microsoft.Azure.Amqp.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Microsoft.Azure.Devices.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Microsoft.Azure.Devices.Shared.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Newtonsoft.Json.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PCLCrypto.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.BCrypt.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.Kernel32.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.NCrypt.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.Windows.Core.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\System.Net.Http.Formatting.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\System.Web.Http.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Validation.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Microsoft.Azure.Amqp.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Microsoft.Azure.Devices.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Newtonsoft.Json.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PCLCrypto.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.BCrypt.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.Kernel32.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.NCrypt.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\PInvoke.Windows.Core.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\System.Net.Http.Formatting.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\System.Web.Http.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\bin\Debug\Validation.xml
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\obj\Debug\CreateDeviceIdentity.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
