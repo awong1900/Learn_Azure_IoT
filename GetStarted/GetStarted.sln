@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadEventHub", "ReadEventHu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadCriticalQueue", "ReadCriticalQueue\ReadCriticalQueue.csproj", "{720A0761-4254-472F-889E-1851100D82A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendCloudToDevice", "SendCloudToDevice\SendCloudToDevice.csproj", "{59D18CDE-8BCA-4C23-A381-2B4024991018}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{720A0761-4254-472F-889E-1851100D82A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720A0761-4254-472F-889E-1851100D82A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720A0761-4254-472F-889E-1851100D82A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D18CDE-8BCA-4C23-A381-2B4024991018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D18CDE-8BCA-4C23-A381-2B4024991018}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D18CDE-8BCA-4C23-A381-2B4024991018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D18CDE-8BCA-4C23-A381-2B4024991018}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
