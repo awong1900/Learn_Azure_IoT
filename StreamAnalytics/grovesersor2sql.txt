@@ -1,0 +1,69 @@
+SELECT
+    time as time,
+    deviceId as deviceId,
+    currentHumidity as humidity,
+    currentTemperature as temperature,
+    currentSound as sound,
+    currentAxisX as axisx,
+    currentAxisY as axisy,
+    currentAxisZ as axisz
+INTO
+    GroveSensorSQL
+FROM
+    iothub
+
+SELECT
+    time as time,
+    deviceId as deviceId,
+    currentHumidity as humidity,
+    currentTemperature as temperature,
+    currentSound as sound,
+    currentAxisX as axisx,
+    currentAxisY as axisy,
+    currentAxisZ as axisz
+INTO
+    GroveSensorBlob
+FROM
+    iothub
+
+SELECT
+    time as time,
+    deviceId as deviceId,
+    currentHumidity as humidity,
+    currentTemperature as temperature,
+    currentSound as sound,
+    currentAxisX as axisx,
+    currentAxisY as axisy,
+    currentAxisZ as axisz
+INTO
+    GroveSensorTable
+FROM
+    iothub
+    
+SELECT
+    time as time,
+    deviceId as deviceId,
+    currentHumidity as humidity,
+    currentTemperature as temperature,
+    currentSound as sound,
+    currentAxisX as axisx,
+    currentAxisY as axisy,
+    currentAxisZ as axisz
+INTO
+    GroveSensorQueue
+FROM
+    iothub
+    
+SELECT
+    time as time,
+    deviceId as deviceId,
+    currentHumidity as humidity,
+    currentTemperature as temperature,
+    currentSound as sound,
+    currentAxisX as axisx,
+    currentAxisY as axisy,
+    currentAxisZ as axisz
+INTO
+    GroveSensorEventHub
+FROM
+    iothub

@@ -1,0 +1,17 @@
+[{
+    "deviceId": "mydevice",
+    "windSpeed": "20"
+},
+{
+    "deviceId": "mydevice",
+    "windSpeed": "22"
+},
+{
+    "deviceId": "mydevice",
+    "windSpeed": "24"
+},
+{
+    "deviceId": "mydevice",
+    "windSpeed": "25"
+}
+]

@@ -701,6 +701,10 @@
             <summary>Gets or sets the batch flush interval associated with the transport.</summary>
             <value>The batch flush interval associated with the transport.</value>
         </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.Amqp.AmqpTransportSettings.EnableReceiverRuntimeMetric">
+            <summary> Gets or sets a value indicating whether the runtime metric of a receiver is enabled. </summary>
+            <value> true if a client wants to access <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo"/> using <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver"/>. </value>
+        </member>
         <member name="P:Microsoft.ServiceBus.Messaging.Amqp.AmqpTransportSettings.EnableLinkRedirect">
             <summary> Gets or sets a value indicating whether this transport is ready to be redirected to the server backend. </summary>
             <value> true if this transport wants to participate in redirect allowed by the server. </value>
@@ -981,6 +985,49 @@
             <summary />
             <param name="result" />
         </member>
+        <member name="T:Microsoft.ServiceBus.Messaging.EventDataBatch">
+            <summary>
+            A helper class for creating a batch of EventData objects to be used for SendBatch or SendBatchAsync call.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventDataBatch.#ctor(System.Int64)">
+            <summary>
+            Creates a batch with the specified maximum size in bytes.
+            </summary>
+            <param name="maxSizeInBytes">The maximum size of the serialized batch message.</param>
+            <remarks>
+            It is recommended to call <see cref="M:Microsoft.ServiceBus.Messaging.EventHubClient.CreateBatch"/> or
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubSender.CreateBatch"/> to create an instance of this class
+            because it uses the maximum message size negotiated with the service.
+            When the application creates a batch using the constructor, it is responsible to ensure
+            the maxSizeInBytes is permitted by the service.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventDataBatch.Count">
+            <summary>Gets the current event count in the batch.</summary>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventDataBatch.TryAdd(Microsoft.ServiceBus.Messaging.EventData)">
+            <summary>Tries to add an event data to the batch if permitted by the batch's size limit.</summary>
+            <param name="eventData">The <see cref="T:Microsoft.ServiceBus.Messaging.EventData" /> to add.</param>
+            <returns>A boolean value indicating if the event data has been added to the batch or not.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when the EventData is null.</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown when the batch is already disposed.</exception>
+            <remarks>
+            This method checks the sizes of the batch, the EventData object and the specified limit to determine
+            if the EventData object can be added. It does not perform other validations on the current batch and
+            the EventData object. It is possible that the application may get exceptions from the send call
+            if the batched EventData objects cannot be sent in a batch. For example, they contain different
+            <see cref="P:Microsoft.ServiceBus.Messaging.EventData.PartitionKey"/> values.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventDataBatch.ToEnumerable">
+            <summary>Converts the batch to an IEnumerable of EventData objects that can be accepted by the
+            SendBatch or SendBatchAsync method.</summary>
+            <returns>Returns an IEnumerable of EventData objects.</returns>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventDataBatch.Dispose">
+            <summary>Disposes the EventData objects contained in this batch.</summary>
+        </member>
         <member name="T:Microsoft.ServiceBus.Messaging.EventHubRuntimeInformation">
             <summary>Returns Event Hubs runtime information, which is required for creating 
             <see cref="T:Microsoft.ServiceBus.Messaging.EventHubSender" /> or 
@@ -1057,8 +1104,8 @@
             Delegate is invoked by passing in PartitionId and then user can return either the starting offset as string or starting UTC time
             for receiving messages.
             This is only used when <see cref="P:Microsoft.ServiceBus.Messaging.Lease.Offset"/> is not provided and receiver is being created for the very first time.
-            <remarks>This corresponds to either <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String)"/> or 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime)"/> depending on the type of return value from delegate.</remarks>
+            <remarks>This corresponds to either <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)"/> or 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime,Microsoft.ServiceBus.Messaging.ReceiverOptions)"/> depending on the type of return value from delegate.</remarks>
             </summary>
         </member>
         <member name="P:Microsoft.ServiceBus.Messaging.EventProcessorOptions.InvokeProcessorAfterReceiveTimeout">
@@ -1073,6 +1120,22 @@
             <see cref="P:Microsoft.ServiceBus.Messaging.EventProcessorOptions.MaxBatchSize" />, and 1 minute for the 
             <see cref="P:Microsoft.ServiceBus.Messaging.EventProcessorOptions.ReceiveTimeOut" /> property.</summary> 
             <value>Returns <see cref="T:Microsoft.ServiceBus.Messaging.EventProcessorOptions" />.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventProcessorOptions.EnableReceiverRuntimeMetric">
+            <summary> Gets or sets a value indicating whether the runtime metric of a receiver is enabled. </summary>
+            <value> true if a client wants to access <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo"/> using <see cref="T:Microsoft.ServiceBus.Messaging.PartitionContext"/>. </value>
+        </member>
+        <member name="T:Microsoft.ServiceBus.Messaging.ReceiverOptions">
+            <summary>Represents options can be set during the creation of a event hub receiver.</summary> 
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverOptions.Identifier">
+            <summary>Gets or sets the identifier of a receiver.</summary> 
+            <value>A string representing the identifier of a receiver.  It will return null if the identifier is not set.</value>
+            <exception cref="T:System.ArgumentException">Thrown if the length of the value is greater than the maximum length of 64.</exception>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverOptions.EnableReceiverRuntimeMetric">
+            <summary> Gets or sets a value indicating whether the runtime metric of a receiver is enabled. </summary>
+            <value> true if a client wants to access <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo"/> using <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver"/>. </value>
         </member>
         <member name="T:Microsoft.ServiceBus.Messaging.CloseReason">
             <summary>Enumerates the reason for closing of session.</summary>
@@ -1102,8 +1165,8 @@
             <summary>Specifies the date and time of the sent time in UTC.</summary>
         </member>
         <member name="T:Microsoft.ServiceBus.Messaging.EventHubSender">
-            <summary>A client class used in send operations for an Event 
-            Hub. Represents a logical sender connection to a specific Event Hub partition.</summary> 
+            <summary>A client class used in send operations for an Event Hub.
+            Represents a logical sender connection to a specific Event Hub partition.</summary> 
         </member>
         <member name="P:Microsoft.ServiceBus.Messaging.EventHubSender.Path">
             <summary>Gets the path of the Event Hub.</summary>
@@ -1122,6 +1185,10 @@
             <returns>The created <see cref="T:Microsoft.ServiceBus.Messaging.EventHubSender"/></returns>
             <remarks>The connection can be obtained either from the Azure portal, or created from
             a <see cref="T:Microsoft.ServiceBus.ServiceBusConnectionStringBuilder"/> instance.</remarks>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubSender.CreateBatch">
+            <summary>Creates a batch where event data objects can be added for later SendBatch or SendBatchAsync call.</summary>
+            <returns>Returns <see cref="T:Microsoft.ServiceBus.Messaging.EventDataBatch" />.</returns>
         </member>
         <member name="M:Microsoft.ServiceBus.Messaging.EventHubSender.Send(Microsoft.ServiceBus.Messaging.EventData)">
             <summary>Sends event data to the logical partition represented by 
@@ -1411,6 +1478,10 @@
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessageSizeExceededException">Thrown if the total serialized size of <paramref name="eventDataList" /> 
             exceeds the allowed size limit for one event transmission (256k by default).</exception> 
         </member>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubClient.CreateBatch">
+            <summary>Creates a batch where event data objects can be added for later SendBatch or SendBatchAsync call.</summary>
+            <returns>Returns <see cref="T:Microsoft.ServiceBus.Messaging.EventDataBatch" />.</returns>
+        </member>
         <member name="M:Microsoft.ServiceBus.Messaging.EventHubClient.CreateSender(System.String)">
             <summary>Creates an Event Hubs sender for the specified publisher.</summary>
             <param name="publisher">The publisher identifier.</param>
@@ -1648,7 +1719,7 @@
         </member>
         <member name="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.PrefetchCount">
             <summary>Gets or sets the number of events that any receive operation will actively cache. By default, this value is inherited from 
-            <see cref="T:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup" />. The default value is 10,000.</summary> 
+            <see cref="T:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup" />. The default value is 300.</summary> 
             <value>The number of messages that the message receiver can simultaneously request.</value>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value is less than the minimum required value of 10.</exception>
             <remarks> Changes to this value will be used in next receive operation, however this does not affect the 
@@ -1666,6 +1737,19 @@
             number of events already cached by the receiver. 
             Setting this property to non-null value will set <see cref="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.PrefetchCount"/> to zero.
             Note that setting the size too low will affect the effective performance of the event hub receive call.</remarks>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.RuntimeInfo">
+            <summary>
+            Gets the approximate receiver runtime information for a logical partition of an Event Hub.
+            To enable the setting, refer to <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverOptions"/> and <see cref="P:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.EnableReceiverRuntimeMetric"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.ReceiverRuntimeMetricEnabled">
+            <summary> Gets a value indicating whether the runtime metric of a receiver is enabled. </summary>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.Identifier">
+            <summary>Gets the identifier of a receiver which was set during the creation of the receiver.</summary> 
+            <value>A string representing the identifier of a receiver. It will return null if the identifier is not set.</value>
         </member>
         <member name="P:Microsoft.ServiceBus.Messaging.EventHubReceiver.EnableCheckpoint">
             <summary>
@@ -1812,7 +1896,7 @@
             <summary>
             The constant that denotes the start of a stream. This can be used as an offset argument in receiver creation.
             </summary>
-            <seealso cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String)"/>
+            <seealso cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)"/>
             
             <code>
                 // the following code snippet creates a receiver that receive events
@@ -1835,7 +1919,7 @@
             The constant that denotes the end of a stream. This can be used as an offset argument in receiver creation to 
             start receiving from the latest event, instead of a specific point in time/offset value.
             </summary>
-            <seealso cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String)"/>
+            <seealso cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)"/>
             
             <code>
                 // the following code snippet creates a receiver that receive events
@@ -1896,6 +1980,11 @@
         <member name="P:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.GroupName">
             <summary>Gets the name of the consumer group.</summary>
             <value>The name of the consumer group.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.EnableReceiverRuntimeMetric">
+            <summary> Gets or sets a value indicating whether the runtime metric of a receiver is enabled. </summary>
+            <value> true if a client wants to access <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo"/> using <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver"/>. </value>
+            <remarks>Its default value is derived from the value of <see cref="P:Microsoft.ServiceBus.Messaging.Amqp.AmqpTransportSettings.EnableReceiverRuntimeMetric"/></remarks>
         </member>
         <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.RegisterProcessor``1(Microsoft.ServiceBus.Messaging.Lease,Microsoft.ServiceBus.Messaging.ICheckpointManager)">
             <summary>Registers an implementation of 
@@ -2073,11 +2162,12 @@
             <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.UnregisterProcessorAsync(Microsoft.ServiceBus.Messaging.Lease,Microsoft.ServiceBus.Messaging.CloseReason)" /> was called.</param> 
             <returns>A task instance that represents the asynchronous operation.</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, and the specified epoch value. You 
             can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <remarks>If the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup"/> has checkpoint enabled, then the
             receiver will get next message from the checkpoint offset. If checkpoint is disabled, 
@@ -2089,10 +2179,11 @@
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="partitionId" /> is not within the expected range, as determined by the 
             <see cref="P:Microsoft.ServiceBus.Messaging.EventHubDescription.PartitionCount" /> property.</exception> 
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition. You can use the 
             created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the 
             <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" /> object that is tied to the given Event Hubs partition.</returns> 
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingException">Thrown if the service encounters a transient error.</exception>
@@ -2111,11 +2202,12 @@
             then receiver will get message from the start of the event stream, as determined by the 
             message retention policy of the Event Hub.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, at the specified starting offset. You 
             can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="partitionId" /> is not within the expected range, as determined by the 
             <see cref="P:Microsoft.ServiceBus.Messaging.EventHubDescription.PartitionCount" /> property.</exception> 
@@ -2139,12 +2231,13 @@
                 var eventData = receiver.Receive();
             </code>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, at the specified starting offset. You 
             can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages.</param>
             <param name="offsetInclusive">A Boolean value that indicates whether <paramref name="startingOffset" /> is treated as an inclusive offset, meaning that the first 
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             event returned is the event that contains the starting offset. Normally, the first event returned is the event after the starting offset.</param> 
             <returns>Returns <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <code>
@@ -2168,12 +2261,13 @@
                 var eventData = receiver.Receive();
             </code>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, at the specified starting offset.</summary>
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages. To specify the start of the stream, see 
             <see cref="F:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.StartOfStream" />.</param> 
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingException">Thrown if the service encounters a transient error.</exception>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingCommunicationException">Thrown if the client 
@@ -2181,7 +2275,7 @@
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="partitionId" /> is not within the expected range, as determined by the 
             <see cref="P:Microsoft.ServiceBus.Messaging.EventHubDescription.PartitionCount" /> property.</exception> 
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, at the specified starting offset. You 
             can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
@@ -2189,13 +2283,15 @@
             <param name="offsetInclusive">A Boolean value that indicates whether <paramref name="startingOffset" /> is treated as an inclusive offset, meaning that the first 
             event returned is the event that contains the starting offset. Normally, the first event returned is the event after the starting offset.</param> 
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, starting at the specified date and time. 
             You can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingDateTimeUtc">The starting UTC time for receiving messages.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingException">Thrown if the service encounters a transient error.</exception>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingCommunicationException">Thrown if the client 
@@ -2212,12 +2308,13 @@
             Keep in mind that there can be clock skew between client time and service time, so user application 
             should be designed to handle duplication in event delivery.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Creates a new Event Hubs receiver in the specified partition, starting at the specified date and time. 
             You can use the created receiver to receive events for one Event Hubs partition, specified by <paramref name="partitionId" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingDateTimeUtc">The starting UTC time for receiving messages.</param>
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubReceiver" />.</returns>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingException">Thrown if the service encounters a transient error.</exception>
             <exception cref="T:Microsoft.ServiceBus.Messaging.MessagingCommunicationException">Thrown if the client 
@@ -2230,20 +2327,22 @@
             Keep in mind that there can be clock skew between client time and service time, so user application 
             should be designed to handle duplication in event delivery.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.Int64)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
             <remarks>If the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup"/> has checkpoint enabled, then the
             receiver will get next message from the checkpoint offset. If checkpoint is disabled, 
             then receiver will get message from the start of the event stream, as determined by the 
             message retention policy of the Event Hub.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String)">
-            <summary>Asynchronous version of <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String)" />.</summary>
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
+            <summary>Asynchronous version of <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary>
             <param name="partitionId">The ID of the partition.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
             <remarks>If the <see cref="T:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup"/> has checkpoint enabled, 
             this overload will always throw InvalidOperationException because checkpoint
@@ -2252,20 +2351,22 @@
             then receiver will get message from the start of the event stream, as determined by the 
             message retention policy of the Event Hub.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Boolean)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Boolean,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages.</param>
             <param name="offsetInclusive">A Boolean value that indicates whether <paramref name="startingOffset" /> is treated as an inclusive offset, meaning that the first 
             event returned is the event that contains the starting offset. Normally, the first event returned is the event after the starting offset.</param> 
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
             <code>
                 // The following code snippet creates a receiver that receive events
@@ -2288,11 +2389,12 @@
                 var eventData = receiver.Receive();
             </code>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingDateTimeUtc">The starting UTC time for receiving messages.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
             <remarks>Service only use this <paramref name="startingDateTimeUtc"/> as an approximation when 
             determining next event to deliver.
@@ -2300,31 +2402,34 @@
             Keep in mind that there can be clock skew between client time and service time, so user application 
             should be designed to handle duplication in event delivery.</remarks>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Int64)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages. To specify the start of the stream, see 
             <see cref="F:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.StartOfStream" />.</param> 
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Boolean,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.String,System.Boolean,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,System.Int64)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.String,System.Boolean,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingOffset">The starting offset at which to start receiving messages.</param>
             <param name="offsetInclusive">A Boolean value that indicates whether <paramref name="startingOffset" /> is treated as an inclusive offset, meaning that the first 
             event returned is the event that contains the starting offset. Normally, the first event returned is the event after the starting offset.</param> 
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime,System.Int64)">
+        <member name="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiverAsync(System.String,System.DateTime,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)">
             <summary>Asynchronous version of 
-            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,System.Int64)" />.</summary> 
+            <see cref="M:Microsoft.ServiceBus.Messaging.EventHubConsumerGroup.CreateReceiver(System.String,System.DateTime,System.Int64,Microsoft.ServiceBus.Messaging.ReceiverOptions)" />.</summary> 
             <param name="partitionId">The ID of the partition.</param>
             <param name="startingDateTimeUtc">The starting UTC time for receiving messages.</param>
             <param name="epoch">The epoch value. The service uses this value to enforce partition/lease ownership.</param>
+            <param name="receiverOptions">Options for a event hub receiver.</param>
             <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
             <remarks>Service only uses this <paramref name="startingDateTimeUtc"/> as an approximation when 
             determining next event to deliver.
@@ -2675,6 +2780,12 @@
         <member name="P:Microsoft.ServiceBus.Messaging.PartitionContext.Lease">
             <summary>Gets or sets the messaging lease.</summary>
             <value>The messaging lease.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.PartitionContext.RuntimeInfo">
+            <summary>
+            Gets the approximate receiver runtime information for a logical partition of an Event Hub.
+            To enable the setting, refer to <see cref="P:Microsoft.ServiceBus.Messaging.EventProcessorOptions.EnableReceiverRuntimeMetric"/>
+            </summary>
         </member>
         <member name="M:Microsoft.ServiceBus.Messaging.PartitionContext.CheckpointAsync">
             <summary>Checkpoints progress of an Event Hubs message stream. Make sure to 
@@ -5433,6 +5544,9 @@
         <member name="F:Microsoft.ServiceBus.Messaging.ManagementStrings.IsAcsAvailable">
             <summary>Specifies the value for the IsAcsAvailable string.</summary>
         </member>
+        <member name="F:Microsoft.ServiceBus.Messaging.ManagementStrings.ScaleUnitGatewayEndpoint">
+            <summary>Specifies the value for the ScaleUnitGatewayEndpoint string.</summary>
+        </member>
         <member name="F:Microsoft.ServiceBus.Messaging.ManagementStrings.AcsManagementEndpoint">
             <summary>Specifies the value for the AcsManagementEndpoint string.</summary>
         </member>
@@ -7296,6 +7410,29 @@
             <see cref="T:Microsoft.ServiceBus.Messaging.ReceiverDisconnectedException" /> class with the specified exception message and inner exception text.</summary> 
             <param name="message">The exception message.</param>
             <param name="innerException">The inner exception text.</param>
+        </member>
+        <member name="T:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo">
+            <summary>Represents the approximate receiver runtime information for a logical partition of an Event Hub.</summary>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo.PartitionId">
+            <summary>Gets the partition ID for a logical partition of an Event Hub.</summary>
+            <value>The partition identifier.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo.LastSequenceNumber">
+            <summary>Gets the last sequence number of the event within the partition stream of the Event Hub.</summary>
+            <value>The logical sequence number of the event.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo.LastEnqueuedTimeUtc">
+            <summary>Gets the enqueued UTC time of the last event.</summary>
+            <value>The enqueued time of the last event.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo.LastEnqueuedOffset">
+            <summary>Gets the offset of the last enqueued event.</summary>
+            <value>The offset of the last enqueued event.</value>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.ReceiverRuntimeInfo.RetrievalTime">
+            <summary>Gets the time of when the runtime info was retrieved.</summary>
+            <value>The enqueued time of the last event.</value>
         </member>
         <member name="T:Microsoft.ServiceBus.Messaging.RuleDescription">
             <summary>Represents a description of a rule.</summary>
@@ -10530,6 +10667,10 @@
             <summary>Gets or sets the number of messages that the message receiver can simultaneously request.</summary>
             <value>The number of messages that the message receiver can simultaneously request.</value>
             <remarks> Takes effect on the next receive call to the server. </remarks>
+        </member>
+        <member name="P:Microsoft.ServiceBus.Messaging.MessageReceiver.Identifier">
+            <summary>Gets or sets the identifier of a receiver which was set during the creation of the receiver.</summary> 
+            <value>A string representing the identifier of a receiver. It will return null if the identifier is not set.</value>
         </member>
         <member name="M:Microsoft.ServiceBus.Messaging.MessageReceiver.OnMessage(System.Action{Microsoft.ServiceBus.Messaging.BrokeredMessage},Microsoft.ServiceBus.Messaging.OnMessageOptions)">
             <summary>Processes a message in an event-driven message pump.</summary>
@@ -16737,6 +16878,12 @@
         <member name="F:Microsoft.ServiceBus.ExceptionErrorCodes.ServerBusy">
             <summary>The server is busy.</summary>
         </member>
+        <member name="F:Microsoft.ServiceBus.ExceptionErrorCodes.ArchiveStorageAccountServerBusy">
+            <summary> Archive Storage Account Server is busy. </summary>
+        </member>
+        <member name="F:Microsoft.ServiceBus.ExceptionErrorCodes.InvalidArchiveStorageAccountResourceId">
+            <summary> Archive Storage Account ResourceId is invalid. </summary>
+        </member>
         <member name="F:Microsoft.ServiceBus.ExceptionErrorCodes.BadGatewayFailure">
             <summary>The error is caused by bad gateway.</summary>
         </member>
@@ -18859,48 +19006,29 @@
             <param name="trackingId">the TrackingIdHeader</param>
             <returns>true, if successful; false, otherwise</returns>
         </member>
-        <member name="T:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty">
+        <member name="T:Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty">
             <summary>
-            A representation of the TrackingId as a Message proprety.
+            Stores a TrackingContext in WCF Message Properties
             </summary>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.#ctor">
-            <summary>
-            Create a new TrackingIdMessageProperty with a new Guid.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.#ctor(System.String)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty.#ctor(Microsoft.ServiceBus.Tracing.TrackingContext)">
             <summary>
             Create a new TrackingIdMessageProperty with the provided Guid.
             </summary>
         </member>
-        <member name="P:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.Id">
+        <member name="P:Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty.TrackingContext">
             <summary>
-            The TrackingId.
+            The TrackingContext.
             </summary>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.TryAdd(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty.Set(System.Collections.Generic.IDictionary{System.String,System.Object},Microsoft.ServiceBus.Tracing.TrackingContext)">
             <summary>
-            Add the TrackingIdMessageProperty.
+            Add or update the TrackingIdMessageProperty.
             </summary>
-            <param name="messageProperties">the MessageProperty to add</param>
-            <param name="trackingId">the property value to add</param>
+            <param name="messageProperties">the MessageProperties collection to add</param>
+            <param name="trackingContext">the TrackingContext instance to add</param>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.Read(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Read the TrackingIdMessageProperty from Message properties.
-            </summary>
-            <param name="messageProperties">the Message properties to read from</param>
-            <returns>the TrackingIdMessageProperty</returns>
-            <exception cref="T:System.ArgumentException">if the TrackingId header is not present</exception>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.Remove(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Remove the TrackingIdMessageProperty from Message properties.
-            </summary>
-            <param name="messageProperties">the Message properties to remove from</param>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingIdMessageProperty.TryGet``1(System.Collections.Generic.IDictionary{System.String,System.Object},``0@)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty.TryGet(System.Collections.Generic.IDictionary{System.String,System.Object},Microsoft.ServiceBus.Tracing.TrackingContextMessageProperty@)">
             <summary>
             Try to read the TrackingIdMessageProperty from Message properties.
             </summary>
@@ -18945,7 +19073,7 @@
             Specifies the tracing correlation Id for the request; the resource provider *must* log this so that end-to-end requests can be correlated across Azure.
             </summary>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetInstanceFromKey(System.String,System.String)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.CreateFromKey(System.String,System.String)">
             <summary>
             Return a tracking context for a key that is common for a subsystem. It generates a new Guid if the key is not present in the collection.
             </summary>
@@ -18953,12 +19081,12 @@
             <param name="overrideSystemTracker">subsystem-specific string like entityName to be used in the tracking context</param>
             <returns>TrackingContext</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetInstance(System.Guid,System.String)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.Create(System.Guid,System.String)">
             <summary>
             Return a tracking context for the given trackingId.
             </summary>
             <param name="guidTrackingId">TrackingId to use for the tracking context</param>
-            <param name="overrideSystemTracker">subsystem-specific string like entityName to be used in the tracking context</param>
+            <param name="subsystemId">subsystem-specific string like entityName to be used in the tracking context</param>
             <returns>TrackingContext</returns>
         </member>
         <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.Create">
@@ -18975,28 +19103,27 @@
         </member>
         <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.Create(System.String,System.Uri,System.Boolean)">
             <summary>
-            Create a new tracking context with the given TrackingId and SubsystemId.
+            Create a new TrackingContext with the given TrackingId and SubsystemId.
             </summary>
-            <returns>TrackingContext</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetInstance(System.String,System.String,System.String,System.String,System.Boolean)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.Create(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
             Return a tracking context for the given trackingId.
             </summary>
-            <param name="stringTrackingId">TrackingId to use for the tracking context</param>
+            <param name="trackingId">TrackingId to use for the tracking context</param>
             <param name="overrideSystemTracker">subsystem-specific string like entityName to be used in the tracking context</param>        
             <param name="correlationRequestId">Specifies the tracing correlation Id for the request; the resource provider *must* log this so that end-to-end requests can be correlated across Azure. </param>
             <param name="clientRequestId">A caller-defined value that identifies the given request.   If specified, this will be included in response information as a way to map the request. </param>
-            <param name="embedRoleInformation">Generally false. Set to true only when the message is received at role boundaries</param>
+            <param name="appendRole">Generally false. Set to true only when the message is received at role boundaries</param>
             <returns>TrackingContext</returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetInstance(System.String,System.String,System.Boolean)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.Create(System.String,System.String,System.Boolean)">
             <summary>
             Return a tracking context for the given trackingId.
             </summary>
-            <param name="stringTrackingId">TrackingId to use for the tracking context</param>
-            <param name="overrideSystemTracker">subsystem-specific string like entityName to be used in the tracking context</param>
-            <param name="embedRoleInformation">Generally false. Set to true only when the message is received at role boundaries</param>
+            <param name="trackingId">TrackingId to use for the tracking context</param>
+            <param name="subsystemId">subsystem-specific string like entityName to be used in the tracking context</param>
+            <param name="appendRole">Set to true when the message is received at role boundaries to append role identifier and number, e.g. '_G30'</param>
             <returns>TrackingContext</returns>
         </member>
         <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetInstance(System.ServiceModel.Channels.Message,System.String,System.Boolean,System.ServiceModel.Web.WebOperationContext)">
@@ -19004,8 +19131,8 @@
             Return a tracking context using TrackingIdHeader/TrackingIdProperty/MessageId in the WCF message
             </summary>
             <param name="message">WCF message</param>
-            <param name="overrideSystemTracker">subsystem-specific string like entityName to be used in the tracking context</param>
-            <param name="embedRoleInformation">Generally false. Set to true only when the message is received at role boundaries</param>
+            <param name="subsytemId">subsystem-specific string like entityName to be used in the tracking context</param>
+            <param name="appendRole">Generally false. Set to true when the message is received at role boundaries</param>
             <param name="webOperationContext">The web context that will be used to extract tracking information if avaliable.</param>
             <returns>TrackingContext</returns>
         </member>
@@ -19014,10 +19141,10 @@
             Used to generate TrackingContext given a WCF message and when the system tracker is not known.
             </summary>
             <param name="message">WCF Message that contains the tracking information</param>
-            <param name="embedRoleInformation">Generally false. Set to true only when the message is received at role boundaries</param>
+            <param name="appendRole">Generally false. Set to true only when the message is received at role boundaries</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.SetTrackingContextRoleIdentifier(System.String,Microsoft.ServiceBus.Tracing.TrackingContext.RolePrefix)">
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.SetCurrentRoleIdentifier(System.String,Microsoft.ServiceBus.Tracing.TrackingContext.RoleType)">
             <summary>
             Sets the role identifier for the process' app domain. The role identifier field is singleton.
             It is called externally outside TrackingContext to avoid dependancy on Microsoft.WindowsAzure.ServiceRuntime
@@ -19035,6 +19162,16 @@
             <summary>
             Ensures the given string contains a TrackingId. If one is already present, nothing occurs.
             Otherwise TrackingId, Timestamp, and if present, SystemTracker are added.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetTrackingId(System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Extract a TrackingId given a properties and headers collection.  Does not write anything back into those collections.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Tracing.TrackingContext.GetSystemTracker(System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Extract a SubsystemId given a properties and headers collection.  Does not write anything back into those collections.
             </summary>
         </member>
         <member name="T:Microsoft.ServiceBus.Tracing.TrackingContext.Scope">
@@ -19084,55 +19221,6 @@
             </summary>
             <param name="messageHeaders">the MessageHeaders</param>
             <param name="systemTrackerHeader">the SystemTrackerHeader (out)</param>
-            <returns>true, if read successfully; false, otherwise</returns>
-        </member>
-        <member name="T:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty">
-            <summary>
-            A representation of the SystemTracker as a Message proprety.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.#ctor">
-            <summary>
-            Create a new SystemTrackerMessageProperty with an empty tracker.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.#ctor(System.String)">
-            <summary>
-            Create a new SystemTrackerMessageProperty with the provided tracker.
-            </summary>
-        </member>
-        <member name="P:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.Tracker">
-            <summary>
-            The System tracker.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.TryAdd(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Add the SystemTrackerMessageProperty.
-            </summary>
-            <param name="messageProperties">the Message Properties to add to</param>
-            <param name="systemTracker">the property value to add</param>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.Read(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Read the SystemTrackerMessageProperty from message properties.
-            </summary>
-            <param name="messageProperties">the Message properties to read from</param>
-            <returns>the SystemTrackerMessageProperty</returns>
-            <exception cref="T:System.ArgumentException">if the SystemTrackerMessageProperty header is not present</exception>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.Remove(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Remove the SystemTrackerMessageProperty from message properties.
-            </summary>
-            <param name="messageProperties">the Message properties to remove from</param>
-        </member>
-        <member name="M:Microsoft.ServiceBus.Tracing.SystemTrackerMessageProperty.TryGet``1(System.Collections.Generic.IDictionary{System.String,System.Object},``0@)">
-            <summary>
-            Try to read the SystemTrackerMessageProperty from Message properties.
-            </summary>
-            <param name="messageProperties">the Message properties to read from</param>
-            <param name="property">the SystemTrackerMessageProperty (out)</param>
             <returns>true, if read successfully; false, otherwise</returns>
         </member>
         <member name="P:Microsoft.ServiceBus.Tracing.EventDefinitionResources.keyword_Powershell">
@@ -20075,6 +20163,13 @@
             <summary>Gets localized string like: Operation {0} failed with an error {1}.</summary>
             <param name="param0">Parameter 0 for string: Operation {0} failed with an error {1}.</param>
             <param name="param1">Parameter 1 for string: Operation {0} failed with an error {1}.</param>
+        </member>
+        <member name="M:Microsoft.ServiceBus.Tracing.EventDefinitionResources.event_BrokeredMessageDeserializationError(System.Object,System.Object,System.Object,System.Object)">
+            <summary>Gets localized string like: BrokeredMessage deserializing from store error. TrackingId: {0}, Entity: {1}, Bytes: {2}, Exception: {3}.</summary>
+            <param name="param0">Parameter 0 for string: BrokeredMessage deserializing from store error. TrackingId: {0}, Entity: {1}, Bytes: {2}, Exception: {3}.</param>
+            <param name="param1">Parameter 1 for string: BrokeredMessage deserializing from store error. TrackingId: {0}, Entity: {1}, Bytes: {2}, Exception: {3}.</param>
+            <param name="param2">Parameter 2 for string: BrokeredMessage deserializing from store error. TrackingId: {0}, Entity: {1}, Bytes: {2}, Exception: {3}.</param>
+            <param name="param3">Parameter 3 for string: BrokeredMessage deserializing from store error. TrackingId: {0}, Entity: {1}, Bytes: {2}, Exception: {3}.</param>
         </member>
         <member name="P:Microsoft.ServiceBus.Tracing.EventSourceSR.Event_IllegalID">
             <summary>Gets localized string like: Event IDs must be greater than zero.</summary>
@@ -21968,6 +22063,12 @@
         <member name="P:Microsoft.ServiceBus.SRClient.CompleteBatchUnsuportedTransaction">
             <summary>Gets localized string like: Transactions are  not supported when completing batches containing lock tokens belonging to different physical partitions for a queue or topic with EnablePartitioning set to true.</summary>
         </member>
+        <member name="P:Microsoft.ServiceBus.SRClient.ApnsProvideOnlyOneCredentialType">
+            <summary>Gets localized string like: Cannot set both token and certificate for APNS.</summary>
+        </member>
+        <member name="P:Microsoft.ServiceBus.SRClient.ApnsTokenPropertiesMissing">
+            <summary>Gets localized string like: To use APNS token, the key id, application id and application name need to be set.</summary>
+        </member>
         <member name="M:Microsoft.ServiceBus.SRClient.CommunicationObjectFaulted(System.Object)">
             <summary>Gets localized string like: The communication object, {0}, cannot be used because it is in a faulted state.</summary>
             <param name="param0">Parameter 0 for string: The communication object, {0}, cannot be used because it is in a faulted state.</param>
@@ -22814,6 +22915,14 @@
         <member name="M:Microsoft.ServiceBus.SRClient.ArchiveNullOrEmptyInput(System.Object)">
             <summary>Gets localized string like: '{0}' is null or empty.</summary>
             <param name="param0">Parameter 0 for string: '{0}' is null or empty.</param>
+        </member>
+        <member name="M:Microsoft.ServiceBus.SRClient.ReceiverNameOverMaxValue(System.Object)">
+            <summary>Gets localized string like: The receiverName parameter exceeds the maximum allowed size of {0} characters.</summary>
+            <param name="param0">Parameter 0 for string: The receiverName parameter exceeds the maximum allowed size of {0} characters.</param>
+        </member>
+        <member name="M:Microsoft.ServiceBus.SRClient.ArchiveNameCustomPartLength(System.Object)">
+            <summary>Gets localized string like: Max length for custom part in an archive name format is '{0}'.</summary>
+            <param name="param0">Parameter 0 for string: Max length for custom part in an archive name format is '{0}'.</param>
         </member>
         <member name="P:Microsoft.ServiceBus.SRAmqp.AmqpFramingError">
             <summary>Gets localized string like: A valid frame header cannot be formed from the incoming byte stream.</summary>

@@ -1,0 +1,5 @@
+// storage account
+DefaultEndpointsProtocol=https;
+AccountName=sensorstorage;
+AccountKey=tqBnSOps4gBuQt6lbRN332srQmxUZFQNkBujTsvlqPBjB1G0TeBKeNpQC1z1XOjNAUDsQYv14OLYEKAVmkaQFw==;
+EndpointSuffix=core.chinacloudapi.cn

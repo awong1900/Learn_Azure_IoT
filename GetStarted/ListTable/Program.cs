@@ -20,16 +20,17 @@ namespace ListTable
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
             // Create the CloudTable object that represents the "people" table.
-            CloudTable table = tableClient.GetTableReference("mytable02");
+            CloudTable table = tableClient.GetTableReference("sensortable");
             //TableQuery<DeviceEntity> query = new TableQuery<DeviceEntity>();
             // Construct the query operation for all customer entities where PartitionKey="Smith".
-            TableQuery<DeviceEntity> query = new TableQuery<DeviceEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "myFirstDevice"));
+            TableQuery<DeviceEntity> query = new TableQuery<DeviceEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "GroveSensor"));
 
             // Print the fields for each customer.
             foreach (DeviceEntity entity in table.ExecuteQuery(query))
             {
-                Console.WriteLine("{0}, {1}\t{2}\t{3}", entity.PartitionKey, entity.RowKey,
-                    entity.DeviceId, entity.WindSpeed);
+                Console.WriteLine("{0}, {1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{8}", entity.PartitionKey, entity.RowKey,
+                    entity.deviceId, entity.humidity, entity.temperature, entity.sound, entity.axisx,
+                    entity.axisy, entity.axisz);
             }
             Console.Read();
         }
@@ -37,16 +38,25 @@ namespace ListTable
 
     public class DeviceEntity : TableEntity
     {
-        public DeviceEntity(string deviceId, string windSpeed)
+        public DeviceEntity(string deviceId, string humidity)
         {
             this.PartitionKey = deviceId;
-            this.RowKey = windSpeed;
+            this.RowKey = humidity;
         }
 
         public DeviceEntity() { }
 
-        public string DeviceId { get; set; }
+        public string deviceId { get; set; }
 
-        public string WindSpeed { get; set; }
+        public string humidity { get; set; }
+
+        public string temperature { get; set; }
+
+        public string sound { get; set; }
+
+        public string axisx { get; set; }
+
+        public string axisy { get; set; }
+        public string axisz { get; set; }
     }
 }

@@ -265,3 +265,5 @@
 \\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\SimulatedDevice\obj\Debug\SimulatedDevice.csprojResolveAssemblyReference.cache
 \\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\SimulatedDevice\obj\Debug\SimulatedDevice.exe
 \\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\SimulatedDevice\obj\Debug\SimulatedDevice.pdb
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\SimulatedDevice\bin\Debug\Microsoft.ServiceBus.dll
+\\Mac\Home\Documents\Github\Learn_Azure_IoT\GetStarted\SimulatedDevice\bin\Debug\Microsoft.ServiceBus.xml
